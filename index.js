@@ -1,6 +1,20 @@
+'use strict';
 const express = require('express');
+const path = require('path');
 
 const app = express();
+
+//set the pug
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+// serving static
+app.use(express.static(path.join(__dirname, 'public')));
+
+// routes
+app.get('/', (req, res) => {
+    res.status(200).render('index');
+});
 
 app.get('/catinfo', (req, res) => {
     const cat = {
