@@ -12,10 +12,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // routes
-app.get('/', (req, res) => {
-    res.status(200).render('index');
-});
-
 app.get('/catinfo', (req, res) => {
     const cat = {
         name: 'Frank',
@@ -25,6 +21,9 @@ app.get('/catinfo', (req, res) => {
     res.json(cat);
 });
 
+app.get('/', (req, res) => {
+    res.status(200).render('index', cat);
+});
 // start the server
 const port = process.env.PORT || 3000;
 
