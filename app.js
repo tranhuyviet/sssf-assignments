@@ -1,5 +1,7 @@
 'use strict';
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const catRoute = require('./routes/catRoute');
 const userRoute = require('./routes/userRoute');
@@ -7,13 +9,15 @@ const userRoute = require('./routes/userRoute');
 const app = express();
 
 // Middlewares
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
+// Routes
 app.get('/', (req, res) => {
     res.send('Home');
 });
 
-// Routes
 app.use('/cat', catRoute);
 app.use('/user', userRoute);
 

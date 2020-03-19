@@ -26,9 +26,11 @@ exports.getCatById = async (req, res, next) => {
 
 exports.addCat = async (req, res, next) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
+        // console.log(req.file);
         const newCat = {
             id: new Date().getTime(),
+            filename: req.file.filename,
             ...req.body
         };
         await Cat.cats.push(newCat);
