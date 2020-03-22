@@ -2,9 +2,12 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const catRoute = require('./routes/catRoute');
 const userRoute = require('./routes/userRoute');
+const authRoute = require('./routes/authRoute');
 
 const app = express();
 
@@ -20,6 +23,7 @@ app.get('/', (req, res) => {
 
 app.use('/cat', catRoute);
 app.use('/user', userRoute);
+app.use('/login', authRoute);
 
 const port = 3000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
