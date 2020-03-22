@@ -1,8 +1,11 @@
 'use strict';
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const { ExtractJwt } = require('passport-jwt');
 
 const User = require('../models/userModel');
+const keys = require('../utils/keys');
 
 // serialize: store user id in session
 passport.serializeUser((id, done) => {
@@ -18,6 +21,7 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
+// LOCAL STRATEGY
 passport.use(
     new LocalStrategy(
         {
@@ -42,6 +46,38 @@ passport.use(
                 }
 
                 // if everything ok (email and password are correct)
+                done(null, user);
+            } catch (error) {
+                done(error, false);
+            }
+        }
+    )
+);
+
+// JSON WEB TOKEN STRATEGY
+passport.use(
+    new JwtStrategy(
+        {
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: keys.JWT_SECRET
+        },
+        async (payload, done) => {
+            try {
+                // payload is in authController
+                // {
+                //     iss: 'VietTran',
+                //     sub: user.id,
+                //     iat: new Date().getTime(), // current time
+                //     exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
+                // }
+                const user = await User.getUser('id', payload.sub);
+
+                // if user does not exists
+                if (!user) {
+                    return done(null, false);
+                }
+
+                // everything ok
                 done(null, user);
             } catch (error) {
                 done(error, false);

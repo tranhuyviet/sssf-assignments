@@ -1,5 +1,6 @@
 'use strict';
 const express = require('express');
+
 const catController = require('../controllers/catController');
 const fileUpload = require('../middlewares/file-upload');
 const router = express.Router();
