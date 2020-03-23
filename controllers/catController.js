@@ -3,7 +3,21 @@ const Cat = require('../models/catModel');
 
 exports.getAllCats = async (req, res, next) => {
     try {
-        const cats = await Cat;
+        console.log(req.query);
+        // GET /cats?gender=male&weight=10&age=11
+        // will return
+        // gender: 'male'
+        // weight: {$gt: 10}
+        // age: {$lt: 11}
+        const gender = req.query.gender ? { gender: req.query.gender } : null;
+        const weight = req.query.weight ? { weight: { $gt: req.query.weight * 1 } } : null;
+        const age = req.query.age ? { age: { $lt: req.query.age * 1 } } : null;
+
+        const query = { ...gender, ...weight, ...age };
+
+        // console.log(query);
+
+        const cats = await Cat.find(query);
         res.json({ status: 'success', data: cats });
     } catch (error) {
         console.log(error);
@@ -13,7 +27,7 @@ exports.getAllCats = async (req, res, next) => {
 exports.getCatById = async (req, res, next) => {
     try {
         const id = req.params.catId;
-        const cat = await Cat.cats.find(cat => cat.id === id);
+        const cat = await Cat.findById(id);
         if (cat) {
             res.json({ status: 'success', data: cat });
         } else {
@@ -26,16 +40,9 @@ exports.getCatById = async (req, res, next) => {
 
 exports.addCat = async (req, res, next) => {
     try {
-        // console.log(req.body);
-        // console.log(req.file);
-        const newCat = {
-            id: new Date().getTime(),
-            filename: req.file.filename,
-            ...req.body
-        };
-        await Cat.cats.push(newCat);
+        const cat = await Cat.create(req.body);
 
-        res.status(201).json({ status: 'success', data: newCat });
+        res.status(201).json({ status: 'success', data: cat });
     } catch (error) {
         console.log(error);
     }
@@ -44,9 +51,9 @@ exports.addCat = async (req, res, next) => {
 exports.deleteCat = async (req, res, next) => {
     try {
         const id = req.params.catId;
-        const filteredCat = await Cat.cats.filter(cat => cat.id !== id);
-        Cat.cats = filteredCat;
-        res.json({ status: 'success', data: null });
+        await Cat.findByIdAndDelete(id);
+
+        res.json({ status: 'deleted success' });
     } catch (error) {
         console.log(error);
     }
@@ -56,14 +63,12 @@ exports.updateCat = async (req, res, next) => {
     try {
         const id = req.params.catId;
 
-        // way 1: update cat using findIndex
-        const finedIndex = await Cat.cats.findIndex(cat => cat.id === id);
-        if (finedIndex === -1) {
-            res.status(404).json({ status: 'failed', message: 'Cat not found on provided id' });
-        } else {
-            Cat.cats[finedIndex] = { ...Cat.cats[finedIndex], ...req.body };
-            res.json({ status: 'success', data: Cat.cats[finedIndex] });
-        }
+        const updatedCat = await Cat.findByIdAndUpdate(id, req.body, { new: true });
+
+        res.json({
+            status: 'updated success',
+            updatedCat
+        });
     } catch (error) {
         console.log(error);
     }
