@@ -50,14 +50,17 @@ exports.getAllStations = async (req, res, next) => {
         let topRight = req.query.topRight ? req.query.topRight : null;
         let bottomLeft = req.query.bottomLeft ? req.query.bottomLeft : null;
 
-        topRight = JSON.parse(topRight);
-        bottomLeft = JSON.parse(bottomLeft);
-        console.log(topRight, bottomLeft);
+        let coordinates = [];
+        if (topRight || bottomLeft) {
+            topRight = JSON.parse(topRight);
+            bottomLeft = JSON.parse(bottomLeft);
+            console.log(topRight, bottomLeft);
 
-        const coordinates = [
-            [topRight.lng, topRight.lat],
-            [bottomLeft.lng, bottomLeft.lat]
-        ];
+            coordinates = [
+                [topRight.lng, topRight.lat],
+                [bottomLeft.lng, bottomLeft.lat]
+            ];
+        }
 
         console.log(coordinates); // [ [ 25.036108, 60.2821946 ], [ 24.7816538, 60.1552076 ] ]
 
