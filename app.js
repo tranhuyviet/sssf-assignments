@@ -28,9 +28,9 @@ app.get('/', (req, res) => {
     res.send('Home');
 });
 
+app.use('/auth', authRoute);
 app.use('/cat', passportJWT, catRoute);
 app.use('/user', passportJWT, userRoute);
-app.use('/auth', authRoute);
 
 // Server start
 const port = process.env.PORT || 3000;
