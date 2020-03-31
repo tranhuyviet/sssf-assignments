@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 require('./passport/passport');
 
-const passportJWT = passport.authenticate('jwt', { session: false });
 const rootSchema = require('./graphql/schema');
 const rootResolver = require('./graphql/resolvers');
 const authRoute = require('./routes/authRoute');

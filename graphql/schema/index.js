@@ -25,11 +25,6 @@ module.exports = buildSchema(`
         password: String
     }
 
-    type Auth{
-        userId: ID!
-        token: String!
-    }
-
     input SpeciesInput {
         speciesName: String!
         categoryID: ID!
@@ -56,7 +51,7 @@ module.exports = buildSchema(`
         animal(animalID: ID!): Animal!
         categories: [Category!]
         species: [Species!]
-        login(email: String!, password: String!): Auth!
+        
     }
 
     type RootMutation {
