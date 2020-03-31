@@ -13,9 +13,12 @@ module.exports = {
     },
 
     // create new species
-    createSpecies: async args => {
-        const { speciesName, categoryID } = args.speciesInput;
+    createSpecies: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated');
+        }
         try {
+            const { speciesName, categoryID } = args.speciesInput;
             const species = await Species.create({
                 speciesName,
                 category: categoryID

@@ -2,7 +2,8 @@ const Animal = require('../../models/animalModel');
 
 module.exports = {
     // get all animals
-    animals: async () => {
+    animals: async (agrs, req) => {
+        console.log(req.isAuth);
         try {
             const animals = await Animal.find();
 
@@ -36,7 +37,10 @@ module.exports = {
     },
 
     // create new animal
-    createAnimal: async args => {
+    createAnimal: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated');
+        }
         try {
             const { animalName, speciesID } = args.animalInput;
             const animal = await Animal.create({
@@ -56,7 +60,10 @@ module.exports = {
     },
 
     // modify animal
-    modifyAnimal: async args => {
+    modifyAnimal: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated');
+        }
         try {
             const { animalID, animalName, speciesID } = args.animalModifyInput;
 
@@ -74,7 +81,7 @@ module.exports = {
             if (!animal) {
                 throw new Error('Something went wrong');
             }
-            console.log(animal);
+            // console.log(animal);
             return animal;
         } catch (error) {
             console.log(error);

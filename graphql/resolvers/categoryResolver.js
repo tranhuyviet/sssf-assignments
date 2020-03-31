@@ -13,7 +13,10 @@ module.exports = {
         }
     },
     // create new category
-    createCategory: async args => {
+    createCategory: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated');
+        }
         try {
             const category = await Category.create({ categoryName: args.categoryName });
 

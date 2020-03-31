@@ -19,6 +19,17 @@ module.exports = buildSchema(`
         categoryName: String!
     }
 
+    type User {
+        _id: ID!
+        email: String!
+        password: String
+    }
+
+    type Auth{
+        userId: ID!
+        token: String!
+    }
+
     input SpeciesInput {
         speciesName: String!
         categoryID: ID!
@@ -35,11 +46,17 @@ module.exports = buildSchema(`
         speciesID: ID
     }
 
+    input UserInput {
+        email: String!
+        password: String!
+    }
+
     type RootQuery {
         animals: [Animal!]
         animal(animalID: ID!): Animal!
         categories: [Category!]
         species: [Species!]
+        login(email: String!, password: String!): Auth!
     }
 
     type RootMutation {
@@ -47,6 +64,7 @@ module.exports = buildSchema(`
         createSpecies(speciesInput: SpeciesInput): Species
         createAnimal(animalInput: AnimalInput): Animal
         modifyAnimal(animalModifyInput: AnimalModifyInput): Animal
+        createUser(userInput: UserInput): User
     }
 
     schema {
