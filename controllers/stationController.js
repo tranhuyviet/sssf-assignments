@@ -1,7 +1,7 @@
 'use strict';
 const Station = require('../models/stationModel');
 const Connection = require('../models/connectionModel');
-// const ConnectionType = require('../models/connectionTypeModel');
+const rectangleBounds = require('../utils/rectangleBounds');
 
 exports.getStationById = async (req, res, next) => {
     try {
@@ -47,24 +47,24 @@ exports.getAllStations = async (req, res, next) => {
     try {
         const limit = req.query.limit ? req.query.limit * 1 : 10;
         const start = req.query.start ? req.query.start * 1 : 0;
-        let topRight = req.query.topRight ? req.query.topRight : null;
-        let bottomLeft = req.query.bottomLeft ? req.query.bottomLeft : null;
+        const topRight = req.query.topRight;
+        const bottomLeft = req.query.bottomLeft;
 
-        let coordinates = [];
-        if (topRight || bottomLeft) {
-            topRight = JSON.parse(topRight);
-            bottomLeft = JSON.parse(bottomLeft);
-            console.log(topRight, bottomLeft);
+        let query = {};
 
-            coordinates = [
-                [topRight.lng, topRight.lat],
-                [bottomLeft.lng, bottomLeft.lat]
-            ];
+        if (topRight && bottomLeft) {
+            const mapBounds = rectangleBounds(JSON.parse(topRight), JSON.parse(bottomLeft));
+
+            query = {
+                Location: {
+                    $geoWithin: {
+                        $geometry: mapBounds
+                    }
+                }
+            };
         }
 
-        console.log(coordinates); // [ [ 25.036108, 60.2821946 ], [ 24.7816538, 60.1552076 ] ]
-
-        const stations = await Station.find()
+        const stations = await Station.find(query)
             .populate({
                 path: 'Connections',
                 model: 'Connection',
