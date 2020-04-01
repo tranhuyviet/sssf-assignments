@@ -1,5 +1,6 @@
 'use strict';
 const mongoose = require('mongoose');
+const autopopulate = require('mongoose-autopopulate');
 
 const stationSchema = mongoose.Schema({
     Title: String,
@@ -11,13 +12,15 @@ const stationSchema = mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Connection',
-            required: true
+            required: true,
+            autopopulate: true
         }
     ],
     Location: {
         type: {
             type: String,
-            enum: ['Point']
+            enum: ['Point'],
+            default: 'Point'
         },
         coordinates: {
             type: [Number], // first is longitude, second is latitude
@@ -25,6 +28,8 @@ const stationSchema = mongoose.Schema({
         }
     }
 });
+
+stationSchema.plugin(autopopulate);
 
 const Station = mongoose.model('Station', stationSchema);
 

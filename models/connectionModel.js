@@ -1,29 +1,27 @@
 'use strict';
 const mongoose = require('mongoose');
+const autopopulate = require('mongoose-autopopulate');
 
 const connectionSchema = mongoose.Schema({
     ConnectionTypeID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ConnectionType'
+        ref: 'ConnectionType',
+        autopopulate: true
     },
     LevelID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Level'
+        ref: 'Level',
+        autopopulate: true
     },
     CurrentTypeID: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'CurrentType'
+        ref: 'CurrentType',
+        autopopulate: true
     },
     Quantity: Number
 });
 
-// connectionSchema.pre(/^find/, function(next) {
-//     this.populate({
-//         path: 'ConnectionTypeId',
-//         select: 'FormalName'
-//     });
-//     next();
-// });
+connectionSchema.plugin(autopopulate);
 
 const Connection = mongoose.model('Connection', connectionSchema);
 
