@@ -1,14 +1,20 @@
 {
-  "name": "sssf-assignments",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Viet Tran",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1"
-  }
+    "name": "sssf-assignments",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "server": "nodemon index.js",
+        "client": "npm run start --prefix client",
+        "dev": "concurrently \"npm run server\" \"npm run client\""
+    },
+    "author": "Viet Tran",
+    "license": "ISC",
+    "dependencies": {
+        "concurrently": "^5.1.0",
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "socket.io": "^2.3.0"
+    }
 }
