@@ -1,17 +1,17 @@
 const Station = require('../../models/stationModel');
 const rectangleBounds = require('../../utils/rectangleBounds');
 
-const refactorLocationAndConnections = args => {
+const refactorLocationAndConnections = (args) => {
     const Location = {
         type: 'Point',
-        coordinates: [args.Location.lng, args.Location.lat]
+        coordinates: [args.Location.lng, args.Location.lat],
     };
 
     let Connections = [];
     if (args.Connections._id.length > 0) {
-        Connections = args.Connections._id.map(con => {
+        Connections = args.Connections._id.map((con) => {
             return {
-                _id: con
+                _id: con,
             };
         });
     }
@@ -21,7 +21,7 @@ const refactorLocationAndConnections = args => {
 
 module.exports = {
     // get all stations
-    stations: async args => {
+    stations: async (args) => {
         try {
             const limit = args.limit ? args.limit * 1 : 10;
             const topRight = args.topRight;
@@ -35,9 +35,9 @@ module.exports = {
                 query = {
                     Location: {
                         $geoWithin: {
-                            $geometry: mapBounds
-                        }
-                    }
+                            $geometry: mapBounds,
+                        },
+                    },
                 };
             }
             const stations = await Station.find(query).limit(limit);
@@ -54,7 +54,7 @@ module.exports = {
     },
 
     // get one station by id
-    station: async args => {
+    station: async (args) => {
         try {
             const station = await Station.findById(args.stationId);
 
@@ -70,8 +70,11 @@ module.exports = {
     },
 
     // add new station
-    createStation: async args => {
+    createStation: async (args, req) => {
         try {
+            if (!req.isAuth) {
+                throw new Error('Unauthenticated');
+            }
             const station = await Station.create(refactorLocationAndConnections(args));
 
             if (!station) {
@@ -86,8 +89,11 @@ module.exports = {
     },
 
     // modify station
-    modifyStation: async args => {
+    modifyStation: async (args, req) => {
         try {
+            if (!req.isAuth) {
+                throw new Error('Unauthenticated');
+            }
             const station = await Station.findByIdAndUpdate(
                 args.stationId,
                 refactorLocationAndConnections(args),
@@ -106,8 +112,11 @@ module.exports = {
     },
 
     // delete station
-    deleteStation: async args => {
+    deleteStation: async (args, req) => {
         try {
+            if (!req.isAuth) {
+                throw new Error('Unauthenticated');
+            }
             const station = await Station.findByIdAndDelete(args.stationId);
             // console.log(station);
             if (!station) {
@@ -119,5 +128,5 @@ module.exports = {
             console.log(error);
             throw error;
         }
-    }
+    },
 };

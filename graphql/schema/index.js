@@ -44,6 +44,11 @@ module.exports = buildSchema(`
         Title: String
     }
 
+    type User {
+        _id: ID!
+        email: String!
+    }
+
     input TopRight {
         lat: Float,
         lng: Float
@@ -81,6 +86,8 @@ module.exports = buildSchema(`
         modifyStation(stationId: ID!, Title: String, AddressLine1: String, Town: String, StateOrProvince: String, Postcode: String, Connections: ConnectionsInput, Location: LocationInput): Station
 
         deleteStation(stationId: ID!): String
+
+        createUser(email: String!, password: String!) : User
     }
 
     schema {
