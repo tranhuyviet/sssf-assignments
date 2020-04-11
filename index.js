@@ -2,6 +2,7 @@
 require('dotenv').config();
 
 const express = require('express');
+
 const mongoose = require('mongoose');
 const graphqlHTTP = require('express-graphql');
 const passport = require('passport');
@@ -35,6 +36,18 @@ const checkAuth = (req, res, next) => {
 };
 
 // Routes
+app.get('/', (req, res) => {
+    let message;
+    if (req.secure) {
+        console.log('Someone visit with secure https');
+        message = 'Welcome to secure https';
+    } else {
+        console.log('Someone visit with nomal http');
+        message = 'Welcome to nomal http';
+    }
+    res.send(message);
+});
+
 app.use('/auth', authRoute);
 
 app.use(
@@ -48,7 +61,8 @@ app.use(
 );
 
 // connect to db and create the server
-const PORT = process.env.PORT || 5000;
+const PORT_HTTP = process.env.PORT_HTTP || 5000;
+const PORT_HTTPS = process.env.PORT_HTTPS || 8000;
 (async () => {
     try {
         await mongoose.connect(process.env.DATABASE_LOCAL, {
@@ -63,9 +77,26 @@ const PORT = process.env.PORT || 5000;
         require('./models/levelModel');
         require('./models/stationModel');
         console.log('Database connected successfully');
-        app.listen(PORT, () => {
-            console.log('Server stated at port:', PORT);
+        /*
+        // http
+        http.createServer((req, res) => {
+            res.writeHead(301, { Location: `https://localhost:${PORT_HTTPS}${req.url}` });
+            res.end();
+        }).listen(PORT, () => {
+            console.log('Server started at port:', PORT);
         });
+
+        // https
+        https.createServer(options, app).listen(PORT_HTTPS, () => {
+            console.log('Secure server started at port:', PORT_HTTPS);
+        });
+        */
+        process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+        if (process.env.NODE_ENV === 'production') {
+            require('./production')(app, process.env.PORT);
+        } else {
+            require('./localhost')(app, PORT_HTTPS, PORT_HTTP);
+        }
     } catch (error) {
         console.error('Database connection failed', error);
     }
