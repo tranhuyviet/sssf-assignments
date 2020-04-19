@@ -26,12 +26,22 @@
         <!-- <div class="bg-blur"></div> -->
         <div class="container">
             <h1 class="title">
-                Part 1 <span><i class="far fa-angry"></i></span>
+                Part 2 <span><i class="far fa-angry"></i></span>
             </h1>
-            <p class="subtitle">
+            <!-- <p class="subtitle">
                 With text, background image, add font (OpenSans) and font awesome icons
-            </p>
+            </p> -->
+            <form>
+                <input type="text" name="greeting" placeholder="type greeting" />
+                <button type="submit">Send</button>
+            </form>
+            <div class="greetings">
+                <button id="refresh">Refresh</button>
+                <ul></ul>
+            </div>
         </div>
+        <script src="js/fetchGQL.js"></script>
+        <script src="js/idb.js"></script>
         <script src="js/main.js"></script>
     </body>
 </html>

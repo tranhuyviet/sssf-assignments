@@ -41,3 +41,18 @@ html,
     color: white;
     font-size: 1rem;
 }
+
+.greetings {
+    height: 70vh;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 1rem;
+    margin-top: 50px;
+    text-align: left;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
